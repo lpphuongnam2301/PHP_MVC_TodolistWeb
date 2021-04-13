@@ -1,3 +1,7 @@
+<?php
+$the_session = array("nv_id" => 1, "nv_email" => "admin@gmail.com");
+$this->session->set_userdata($the_session);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,20 +20,24 @@
   <link href="<?= base_url('assets/css/material-dashboard.css?v=2.1.2');?>" rel="stylesheet" />
   <link href="<?= base_url('assets/demo/demo.css');?>" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-latest.js"></script>
+  <style type="text/css">
+    #contentTxt {
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}
+  </style>
 </head>
 <body class="">
   <div class="wrapper ">
           <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <a class="navbar-brand">Todolist Website</a>
-          </div>
-          <div class="collapse navbar-collapse justify-content-end">
-            
-          </div>
-        </div>
-      </nav>
+      
       <!-- End Navbar -->
       <div class="content" style="padding-top: 70px;">
         <div class="container-fluid">
@@ -103,6 +111,7 @@
             </div>
           </div>
           <div class="row">
+            <!-- public -->
             <div class="col-lg-6 col-md-12">
               <div class="card">
                 <div class="card-header card-header-tabs card-header-primary">
@@ -121,7 +130,7 @@
                 </div>
                 <div class="card-body">
                   <div class="tab-content">
-                    <div class="tab-pane active" id="profile" style="overflow-y:scroll; height: 280px;">
+                    <div class="tab-pane active" id="profile testchoi" style="overflow-y:scroll; height: 280px;">
                       <table class="table">
                         <tbody>
                           <!-- o day -->
@@ -183,39 +192,352 @@
                 </div>
               </div>
             </div>
-                        <div class="col-lg-6 col-md-12">
+            <!-- private -->
+            <div class="col-lg-6 col-md-12">
               <div class="card">
                 <div class="card-header card-header-tabs card-header-primary">
-                  <h4 class="card-title">Employees Stats</h4>
-                  <p class="card-category">New employees on 15th September, 2016</p>
+                  <h4 class="card-title">Private Tasks</h4>
+                  <p class="card-category">Only You and Admin can see</p>
+                  <div class="btn btn-round btn-fill btn-info" 
+                  style="height: 38px;
+                        float: right;
+                        margin-left: 1%;" id = "newTaskbtnPrivate">
+                      Thêm thẻ mới</div>
+                  <input type="text" class="form-control" 
+                  style="width: 200px;
+                          float: right;
+                          color: white;"
+                  placeholder="Nhập tên thẻ" id = "newTasktxtPrivate">
                 </div>
                 <div class="card-body">
                   <div class="tab-content">
-                    <div class="tab-pane active" id="profile">
+                    <div class="tab-pane active" id="profile testchoi" style="overflow-y:scroll; height: 280px;">
                       <table class="table">
                         <tbody>
-                          <!-- o day private -->
+                          <!-- o day -->
+                          <?php
+                            foreach ($jobList as $row)
+                            {
+                            if($row['job_type'] == 0)
+                            {
+                              if($this->session->userdata('nv_id') == 1)
+                              {    
+                            ?>
                           <tr>
                             <td>
                               <div class="form-check">
                                 <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="" checked>
+                                  <input class="form-check-input cbTaskPrivate" type="checkbox" value="" anlong="<?= $row['job_id'] ?>" 
+                                  <?php 
+                                    if($row['job_status'] == 0)
+                                    {
+                                      echo "unchecked";
+                                    } else {
+                                      echo "checked";
+                                    }
+                                  ?> >
                                   <span class="form-check-sign">
                                     <span class="check"></span>
                                   </span>
                                 </label>
                               </div>
                             </td>
-                            <td>Sign contract for "What are conference organizers afraid of?"</td>
+                            <td class="endDateformatPublic">
+                              <?php 
+                                $controller::formatEnddate($row['job_enddate'],$row['job_status']);
+                                ?>
+                            </td>
+
+                            <td>
+                              <?= $row['job_name'] ?>
+                            </td>
+
+                            <td>
+                              <?= $row['nv_firstname'].' '.$row['nv_lastname']?>
+                            </td>
+
                             <td class="td-actions text-right">
-                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm editBtnPrivate" anlong="<?= $row['job_id'] ?>">
                                 <i class="material-icons">edit</i>
                               </button>
-                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm deleteBtnPrivate" anlong="<?= $row['job_id'] ?>">
                                 <i class="material-icons">close</i>
                               </button>
                             </td>
-                          </tr>  
+                          </tr>
+                          
+                          <?php }
+                              else 
+                              {
+                                if($row['nv_id'] == $this->session->userdata('nv_id'))
+                                {?>
+                                  <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input cbTaskPrivate" type="checkbox" value="" anlong="<?= $row['job_id'] ?>" 
+                                  <?php 
+                                    if($row['job_status'] == 0)
+                                    {
+                                      echo "unchecked";
+                                    } else {
+                                      echo "checked";
+                                    }
+                                  ?> >
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td class="endDateformatPublic">
+                              <?php 
+                                $controller::formatEnddate($row['job_enddate'],$row['job_status']);
+                                ?>
+                            </td>
+
+                            <td>
+                              <?= $row['job_name'] ?>
+                            </td>
+
+                            <td>
+                              <?= $row['nv_firstname'].' '.$row['nv_lastname']?>
+                            </td>
+
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm editBtnPrivate" anlong="<?= $row['job_id'] ?>">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm deleteBtnPrivate" anlong="<?= $row['job_id'] ?>">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                               <?php }
+                              } 
+                        }}?>   
+                          <!--ket thuc day  -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+
+<!-- Modal Edit -->
+<div class="modal fade editModalPublic" role="dialog" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog modal-lg" >
+        <div class="modal-content">
+        
+            <div class="modal-header">
+              <img src="<?= base_url('assets/img/icons8-task-completed-20.png')?>" style="">
+                <input class="nameTxt" type="text" style="border: none; font-size: 30px; width: 800px;" value="" id="nameTxt" anlong = "">
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-8">
+
+                    <div class="row">
+                      <div class="col-md-1">
+                        <div class="form-group" style="margin-top: 11px;">
+                          <label class="bmd-label-floating"></label>
+                          <button type="button" rel="tooltip" title="Remove StartDate" class="btn btn-danger btn-link btn-sm" id="resetStartdate" style="">
+                          <i class="material-icons">close</i>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating" style="color: black;font-weight: bold;">Start Date</label>
+                          <input type="date" class="form-control" id="startdateTxt" style="">
+                          
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div class="form-group" style="margin-top: 11px;">
+                          <label class="bmd-label-floating"></label>
+                          <button type="button" rel="tooltip" title="Remove EndDate" class="btn btn-danger btn-link btn-sm" id="resetEnddate" style="">
+                          <i class="material-icons">close</i>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating" style="color: black;font-weight: bold;">End Date</label>
+                          <input type="date" class="form-control" id="enddateTxt">
+                        </div>
+                      </div>
+                      </div>
+
+                      <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group" style="margin-top: -10px;">
+                        <input class="" id="dateError" style="color: red; width: 100%; border: none;" readonly>
+                        </div>
+                        </div>
+                      </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <img src="<?= base_url('assets/img/icons8-edit-property-20.png')?>" style="">
+                          <label style="color: black;font-weight: bold;">Description</label>
+                          <div class="form-group">
+                            <textarea id="contentTxt" class="contentTxt" rows="4" style=""></textarea>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group" style="margin-top: -10px;">
+                          <img src="<?= base_url('assets/img/icons8-upload-file-10.png')?>" style="">
+                          <label style="color: black;font-weight: bold;">Files</label>
+                          <div class="form-group">
+                            file o day
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+
+                        <div class="form-group">                          
+                          <img src="<?= base_url('assets/img/icons8-table-of-content-20.png')?>" style="">
+                          <label style="color: black;font-weight: bold;">Comments</label>
+                        </div>
+
+                        <div class="form-group" style="margin-top: -30px; ">
+                          <div class="card">
+                            <div class="card-header" >
+                            <input type="text" class="form-control" 
+                              style="width: 350px;
+                              float: left;
+                              color: black;"
+                              placeholder="Write comment here..." id = "commentTxt" value="">
+                            <div class="btn btn-round btn-fill btn-info" 
+                              style="height: 35px;
+                              float: left;
+                              margin-left: 1%;" id = "commentBtn">
+                                  Send</div>
+                            </div>
+                          </div>
+                        </div>
+
+                          <div class="form-group" style="margin-top: -65px;">
+                            <div class="card">
+                            <div class="card-header" >
+                            <div class="card-body">
+                            <div class="tab-content">
+                            <div class="tab-pane active" id="profile" >
+                            <table class="table table-borderless">
+                              <!-- khu vuc comment -->
+                            <tbody style="height: 100px;" class="commentArea">
+                              
+                            </tbody>
+                            </table>
+                            </div>
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <img src="<?= base_url('assets/img/icons8-add-user-group-man-man-20.png')?>" style="">
+                      <label class="bmd-label-floating" style="color: black;font-weight: bold;">Partners</label>
+                      <div class="btn btn-primary btn-block" style="height: 40px;width: 90px;text-align: left;" id="thanhvienBtn">More</div>  
+
+                      <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <!-- <div class="card">                            
+                            <div class="card-body"> -->
+                            <!-- <div class="tab-content"> -->
+                            <div class="tab-pane active" id="profile" >
+                            <table class="table table-borderless">
+                              <!-- khu vuc partner -->
+                            <tbody class="partnerArea">
+                            
+                              <!-- end -->
+                            </tbody>
+                            </table>
+                            </div>
+                            <!-- </div> -->
+                            <!-- </div>
+                          </div> -->
+                        </div>
+                      </div>
+                    </div> 
+
+                    </div>
+                  </div>
+
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+<!-- End of Modal edit -->
+<!-- edit modal -->
+                            <div class="modal fade editCmtModal" id="editCmtModal" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+        
+                            <div class="modal-header">
+                              <h5 class="modal-title">Edit Comment</h5>
+                            </div>
+            
+                            <div class="modal-body">
+                              <label style="color: black;font-weight: bold;">New Comment</label>
+                              <input type="text" id="contentEditModal" style="width: 100%;">
+                            </div>
+            
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary closeEditCmtModal"  >Close</button>
+                              <button type="button" class="btn btn-primary saveEditCmtModal" anlong="">Save</button>
+                              </div>
+            
+                            </div>
+                            </div>
+                            </div>
+                              <!-- end -->
+    <!-- add partner modal -->
+                            <div class="modal fade partnerModal" id="partnerModal" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+        
+                            <div class="modal-header">
+                              <h5 class="modal-title">Edit Comment</h5>
+                            </div>
+            
+                            <div class="modal-body">
+                              <!-- partner body modal -->
+                                                    <!-- <div class="col-lg-6 col-md-12"> -->
+              <div class="card">
+                <div class="card-header card-header-tabs card-header-primary">
+                  <h4 class="card-title">Employees List</h4>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="profile">
+                      <table class="table">
+                        <tbody class="partnerModalBody">
+                          <!-- o day private -->
+                           
                            <!-- ket huc private -->
                         </tbody>
                       </table>
@@ -223,35 +545,18 @@
                   </div>
                 </div>
               </div>
-            </div>             
-          </div>
-      </div>
-
-<!-- Modal Edit -->
-<div class="modal fade editModalPublic" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-        
-            <div class="modal-header">
-                <h5 class="modal-title">Tiêu đề Hộp thoại</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+            <!-- </div>   -->
+                              <!-- end body -->
+                            </div>
             
-            <div class="modal-body">
-                Trình bày các thành phần của Hộp thoại ở đây
-            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary closePartnerModal">Close</button>
+                              </div>
             
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Lưu lại</button>
-            </div>
-            
-        </div>
-    </div>
-</div>
-<!-- End of Modal edit -->
+                            </div>
+                            </div>
+                            </div>
+                              <!-- end -->
   <?php include (APPPATH.'controllers/AjaxController.php') ?>
 </body>
 
