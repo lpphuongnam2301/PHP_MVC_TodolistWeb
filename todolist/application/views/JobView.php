@@ -48,15 +48,14 @@ $this->session->set_userdata($the_session);
                   <div class="card-icon">
                     <i class="material-icons">content_copy</i>
                   </div>
-                  <p class="card-category">Used Space1</p>
-                  <h3 class="card-title">49/50
-                    <small>GB</small>
+                  <p class="card-category">Tổng công việc</p>
+                  <h3 class="card-title"><?= $sumOfJob?>
                   </h3>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
-                    <i class="material-icons text-danger">warning</i>
-                    <a href="javascript:;">Get More Space...</a>
+                    <i class="material-icons text-danger">date_range</i>
+                    <div>Số công việc đã được tạo</div>
                   </div>
                 </div>
               </div>
@@ -67,12 +66,12 @@ $this->session->set_userdata($the_session);
                   <div class="card-icon">
                     <i class="material-icons">store</i>
                   </div>
-                  <p class="card-category">Revenue</p>
-                  <h3 class="card-title">$34,245</h3>
+                  <p class="card-category">Tổng nhân viên</p>
+                  <h3 class="card-title"><?= $sumOfNv?></h3>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
-                    <i class="material-icons">date_range</i> Last 24 Hours
+                    <i class="material-icons text-danger">date_range</i>Số nhân viên trong công ty
                   </div>
                 </div>
               </div>
@@ -83,12 +82,12 @@ $this->session->set_userdata($the_session);
                   <div class="card-icon">
                     <i class="material-icons">info_outline</i>
                   </div>
-                  <p class="card-category">Fixed Issues</p>
-                  <h3 class="card-title">75</h3>
+                  <p class="card-category">Tổng công việc chưa hoàn thành</p>
+                  <h3 class="card-title"><?=$sumOfJobLate?>/<?=$sumOfJob?></h3>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
-                    <i class="material-icons">local_offer</i> Tracked from Github
+                    <i class="material-icons text-danger">update</i> Toàn bộ công việc
                   </div>
                 </div>
               </div>
@@ -97,14 +96,14 @@ $this->session->set_userdata($the_session);
               <div class="card card-stats">
                 <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
-                    <i class="fa fa-twitter"></i>
+                    <i class="material-icons">done</i>
                   </div>
-                  <p class="card-category">Followers</p>
-                  <h3 class="card-title">+245</h3>
+                  <p class="card-category">Tổng công việc đã hoàn thành</p>
+                  <h3 class="card-title"><?= $sumOfJobDone?>/<?= $sumOfJob?></h3>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
-                    <i class="material-icons">update</i> Just Updated
+                    <i class="material-icons text-danger">update</i> Toàn bộ công việc
                   </div>
                 </div>
               </div>
@@ -392,26 +391,50 @@ $this->session->set_userdata($the_session);
                         </div>
                       </div>
                     </div>
-
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group" style="margin-top: -10px;">
                           <img src="<?= base_url('assets/img/icons8-upload-file-10.png')?>" style="">
                           <label style="color: black;font-weight: bold;">Files</label>
+                          <input type="file" name="" id="fileInput">
+                          <button id="chooseFileBtn">Choose</button>
+                          <button id="saveFileBtn">Save</button>
+                          <p id="fileErr" style="color:red; font-weight: bold;"></p>
                           <div class="form-group">
-                            file o day
+                            <!-- file area -->
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <!-- <div class="card">                            
+                            <div class="card-body"> -->
+                            <!-- <div class="tab-content"> -->
+                            <div class="tab-pane active" id="profile" >
+                            <table class="table table-borderless">
+                              <!-- khu vuc file -->
+                            <tbody style="height: 100px;" class="fileArea">
+                            
+                              <!-- end -->
+                            </tbody>
+                            </table>
+                            </div>
+                            <!-- </div> -->
+                            <!-- </div>
+                          </div> -->
+                        </div>
+                      </div>
+                    </div> 
+<!-- end of file area -->
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-top: -30px;">
                       <div class="col-md-12">
 
                         <div class="form-group">                          
                           <img src="<?= base_url('assets/img/icons8-table-of-content-20.png')?>" style="">
                           <label style="color: black;font-weight: bold;">Comments</label>
                         </div>
-
                         <div class="form-group" style="margin-top: -30px; ">
                           <div class="card">
                             <div class="card-header" >

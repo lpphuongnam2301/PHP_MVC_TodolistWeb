@@ -91,6 +91,9 @@
 
                             //partner
                             $('.partnerArea').html(data.partnerArea);
+
+                            //file
+                            $('.fileArea').html(data.fileArea);
                     }
                 });
         });
@@ -178,6 +181,9 @@
 
                             //partner
                             $('.partnerArea').html(data.partnerArea);
+
+                            //file
+                            $('.fileArea').html("hello");
                     }
                 });
         });
@@ -435,6 +441,63 @@
                     }
                 });
         });
+
+        //xoa file khoi job
+        $(document).on("click", ".removeFileBtn", function()
+        {         
+            var jobId = $('#nameTxt').attr("anlong");   
+            var fileTxt = $(this).attr("anlong");
+            $.ajax(
+                {
+                    url:"<?= base_url()?>index.php/JobController/removeFile",
+                    method:"POST",
+                    data: {"jobId" : jobId, "fileTxt" : fileTxt},
+                    success: function(data)
+                    {
+                        $('.fileArea').html(data);
+                    }
+                });
+        });
+
+        //choose file
+        $(document).on("click", "#chooseFileBtn", function()
+        {         
+            $("#fileInput").click();
+        });
+
+        //save file
+        $(document).on("click", "#saveFileBtn", function()
+        {         
+            var jobId = $('#nameTxt').attr("anlong");   
+            var fullFile = $("#fileInput")[0].files[0];
+            var fileName = "";
+            var fd = new FormData();
+            if(!jQuery.isEmptyObject(fullFile))
+            {
+                fileName = fullFile.name;
+            }
+            fd.append('jobId', jobId);
+            fd.append('fullFile', fullFile);
+            fd.append('fileName', fileName);
+
+            $.ajax(
+                {
+                    url:"<?= base_url()?>index.php/JobController/updateFile",
+                    method:"POST",
+                    data: fd,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function(data)
+                    {
+                        $('.fileArea').html(data.fileArea);
+                        $('#fileErr').html(data.fileErr);
+                    }
+                });
+        });
+
+        //download file
+        
 
     });
 </script>

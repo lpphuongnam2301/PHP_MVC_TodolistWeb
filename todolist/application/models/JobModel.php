@@ -11,6 +11,26 @@ class JobModel extends CI_Model
 		$query = $this->db->query("select * from todo_job where job_id = ".$id);
 		return $query->result_array();
 	}
+	public function readFile($id)
+	{
+		$query = $this->db->query("select job_files from todo_job where job_id = ".$id);
+		$data = $query->result_array();
+		foreach ($data as $key) 
+		{
+			$list = $key['job_files'];
+		}
+		return $list;
+	}
+	public function readJobId()
+	{
+		$query = $this->db->query("select job_id from todo_job");
+		$data = $query->result_array();
+		foreach ($data as $key) 
+		{
+			$list = $key['job_id'];
+		}
+		return $list;
+	}
 	public function readPartner($id)
 	{
 		$query = $this->db->query("select nv_partners from todo_job where job_id = ".$id);

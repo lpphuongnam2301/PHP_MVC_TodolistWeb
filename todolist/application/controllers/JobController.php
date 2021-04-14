@@ -14,21 +14,51 @@ class JobController extends CI_Controller
 	public function read()
 	{
 		$jobList = $this->JobModel->read();
+		$nvList = $this->JobModel->readNhanvien();
 		// $data['jobList'] = $jobList;
 		// $object['controller'] = $this;
+		$sumOfJob = 0;
+		$sumOfNv = 0;
+		$sumOfJobLate = 0;
+		$sumOfJobDone = 0;
+		foreach ($jobList as $key) 
+		{
+			$sumOfJob++;
+			if($key['job_status'] == 0)
+			{
+				$sumOfJobLate++;
+			} else {
+				$sumOfJobDone++;
+			}
+		}
+		foreach ($nvList as $emp) 
+		{
+			$sumOfNv++;
+		}
 		$data = array(
 			'jobList' => $jobList,
-			'controller' => $this
+			'controller' => $this,
+			'sumOfNv' => $sumOfNv,
+			'sumOfJob' => $sumOfJob,
+			'sumOfJobLate' => $sumOfJobLate,
+			'sumOfJobDone' => $sumOfJobDone
 		);
 		$this->load->view('JobView', $data);
+	}
+	public function nextJobId()
+	{
+		$data = $this->JobModel->readJobId();
+		return (int)$data + 1;
 	}
 	public function insert()
 	{
 		$jobName = $this->input->post('jobName');
 		$jobType = $this->input->post('jobType');
 		$nvId = $this ->session->userdata('nv_id');
+		$jobId = $this->nextJobId();
 		$data = 
 		array(
+			'job_id' => $jobId,
         	'job_name' => $jobName,
         	'job_startdate' => '0000-00-00',
         	'job_enddate' => '0000-00-00',
@@ -38,12 +68,23 @@ class JobController extends CI_Controller
         	'job_status' => 0
     	);
 
+		//tao thu muc voi ten la id cua job
+		$location = APPPATH."filesUpload/".$jobId;
+		mkdir($location, 0700);
+
+
     	$this->JobModel->insert($data);
+
 	}
 	public function delete()
 	{
 		$jobId = $this->input->post('jobId');
 		$this->JobModel->delete($jobId);
+
+		//delete folder
+		$location = APPPATH."filesUpload/".$jobId;
+		array_map('unlink', glob("".$location."/*.*"));
+		rmdir($location);
 	}
 	public static function formatEnddate($endDate, $status)
 	{
@@ -108,6 +149,7 @@ class JobController extends CI_Controller
 
 		$output['commentArea'] = $this->readComment($jobId);
 		$output['partnerArea'] = $this->readPartner($jobId);
+		$output['fileArea'] = $this->readFile($jobId);
 
 		echo json_encode($output);
 	}
@@ -309,6 +351,7 @@ class JobController extends CI_Controller
 		}
 		return $output;
 	}
+
 	public function loadModalNhanvien()
 	{
 		$jobId = $this->input->post('jobId');
@@ -352,6 +395,128 @@ class JobController extends CI_Controller
 		}
 		return $output;
 	}
+	public function readFile($jobId)
+	{
+		$data = $this->JobModel->readFile($jobId);
+		$output = "";
+		$data = explode(",", $data);//cat chuoi bang dau ,
+		foreach ($data as $row => $w) // bo khoang trang khoi key
+		{
+			$data[$row] = trim($w);
+		}
 
+		if(empty($data))
+		{
+			$output = "";
+		} else {
+		foreach ($data as $key) 
+		{
+			if($key != "")
+			{
+			$output .=
+			'<tr>
+                <td style="font-weight: bold;">'.$key.'</td>
+                    <td class="td-actions text-right">
+                    
+                    <a type="button" rel="tooltip" title="Download" class="btn btn-danger btn-link btn-sm downFileBtn" anlong="'.$key.'"
+                    href="index.php/JobController/downloadFile/'.$jobId.'/'.$key.'">
+                    <i class="material-icons">download</i>
+                    </a>
+                    <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm removeFileBtn" anlong="'.$key.'">
+                    <i class="material-icons">close</i>
+                    </button>
+                </td>
+
+            </tr>';
+        	}
+		}
+		}
+		return $output;
+	}
+
+	public function removeFile()
+	{
+		$jobId = $this->input->post('jobId');
+		$fileTxt = $this->input->post('fileTxt');
+		$string = "job_files";
+		$data = $this->JobModel->readFile($jobId);
+		$data = explode(",", $data);//cat chuoi bang dau ,
+		foreach ($data as $key) 
+		{
+			if($key == $fileTxt)
+			{
+				$index = array_search($key, $data);
+				unset($data[$index]);
+				break;
+			}
+		}
+		$op = "";
+		foreach ($data as $row) 
+		{
+			$op = $op.$row.",";
+		}
+		$stringVal = rtrim($op, ", ");
+		$this->JobModel->update($jobId, $string, $stringVal);
+
+		//delete file
+		$location = APPPATH."filesUpload/".$jobId."/".$fileTxt;
+		unlink($location);
+
+		//reload
+		$output = $this->readFile($jobId);
+    	echo $output;
+	}
+
+	public function updateFile()
+	{
+		$jobId = $this->input->post('jobId');
+		$fileName = $this->input->post('fileName');
+		$string = "job_files";
+		$data = $this->JobModel->readFile($jobId);
+		$data = explode(",", $data);//cat chuoi bang dau ,
+		//$output = array();
+		if(empty($data))
+		{
+			$data = array();
+			array_push($data, $fileName);
+		} else {
+			array_push($data, $fileName);
+		}
+		$stringVal = "";
+		foreach ($data as $key) 
+		{
+			if($key != "")
+			{
+				$stringVal = $stringVal.$key.",";
+			}
+		}
+		$stringVal = rtrim($stringVal, ", ");
+
+		$output = array();
+		//up file
+		$file = $_FILES['fullFile'];
+		$location = APPPATH."filesUpload/".$jobId."/".$fileName;
+
+		if (file_exists($location)) 
+		{
+    		$output["fileErr"] = "File này đã có";
+		} else {
+   	 		$output["fileErr"] = "";
+   	 		move_uploaded_file($_FILES['fullFile']['tmp_name'], $location);
+			$this->JobModel->update($jobId, $string, $stringVal);
+		}
+		//reload
+		$output["fileArea"] = $this->readFile($jobId);
+    	echo json_encode($output);
+	}
+
+	public function downloadFile($jobId, $fileName)
+	{
+		$this->load->helper('download');
+
+		$location = APPPATH."filesUpload/".$jobId."/".$fileName;
+
+		force_download($location, NULL);
+	}
 }
 ?>
