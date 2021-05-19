@@ -1,7 +1,4 @@
-<?php
-$the_session = array("nv_id" => 1, "nv_email" => "admin@gmail.com");
-$this->session->set_userdata($the_session);
-?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,12 +31,15 @@ $this->session->set_userdata($the_session);
 }
   </style>
 </head>
+<?php
+include (APPPATH."views/header.php");
+?>
 <body class="">
-  <div class="wrapper ">
+  <div class="wrapper">
           <!-- Navbar -->
       
       <!-- End Navbar -->
-      <div class="content" style="padding-top: 70px;">
+      <div class="content">
         <div class="container-fluid">
           <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6">
@@ -116,10 +116,17 @@ $this->session->set_userdata($the_session);
                 <div class="card-header card-header-tabs card-header-primary">
                   <h4 class="card-title">Public Tasks</h4>
                   <p class="card-category">Task for all Users</p>
-                  <div class="btn btn-round btn-fill btn-info" 
+                  <div class="newTaskbtnPublic" 
                   style="height: 38px;
                         float: right;
-                        margin-left: 1%;" id = "newTaskbtnPublic">
+                        margin-left: 1%;
+                        background-color: #00bcd4ed;
+                        border-radius: 30px;
+                        width:110px;
+                        text-align:center;
+                        padding-top: 10px;
+                        cursor: pointer;
+                        " id = "newTaskbtnPublic">
                       Thêm thẻ mới</div>
                   <input type="text" class="form-control" 
                   style="width: 200px;
@@ -197,10 +204,17 @@ $this->session->set_userdata($the_session);
                 <div class="card-header card-header-tabs card-header-primary">
                   <h4 class="card-title">Private Tasks</h4>
                   <p class="card-category">Only You and Admin can see</p>
-                  <div class="btn btn-round btn-fill btn-info" 
+                  <div class="" 
                   style="height: 38px;
                         float: right;
-                        margin-left: 1%;" id = "newTaskbtnPrivate">
+                        margin-left: 1%;
+                        background-color: #00bcd4ed;
+                        border-radius: 30px;
+                        width:110px;
+                        text-align:center;
+                        padding-top: 10px;
+                        cursor: pointer;
+                        " id = "newTaskbtnPrivate">
                       Thêm thẻ mới</div>
                   <input type="text" class="form-control" 
                   style="width: 200px;
@@ -219,7 +233,7 @@ $this->session->set_userdata($the_session);
                             {
                             if($row['job_type'] == 0)
                             {
-                              if($this->session->userdata('nv_id') == 1)
+                              if($this->session->userdata('username') == "admin@gmail.com")
                               {    
                             ?>
                           <tr>
@@ -268,7 +282,7 @@ $this->session->set_userdata($the_session);
                           <?php }
                               else 
                               {
-                                if($row['nv_id'] == $this->session->userdata('nv_id'))
+                                if($row['nv_email'] == $this->session->userdata('username'))
                                 {?>
                                   <tr>
                             <td>
@@ -443,10 +457,17 @@ $this->session->set_userdata($the_session);
                               float: left;
                               color: black;"
                               placeholder="Write comment here..." id = "commentTxt" value="">
-                            <div class="btn btn-round btn-fill btn-info" 
-                              style="height: 35px;
-                              float: left;
-                              margin-left: 1%;" id = "commentBtn">
+                            <div class="" 
+                            style="height: 38px;
+                        float: right;
+                        margin-left: 1%;
+                        background-color: #00bcd4ed;
+                        border-radius: 30px;
+                        width:90px;
+                        text-align:center;
+                        padding-top: 10px;
+                        cursor: pointer;
+                        " id = "commentBtn">
                                   Send</div>
                             </div>
                           </div>
@@ -480,7 +501,7 @@ $this->session->set_userdata($the_session);
                     <div class="form-group">
                       <img src="<?= base_url('assets/img/icons8-add-user-group-man-man-20.png')?>" style="">
                       <label class="bmd-label-floating" style="color: black;font-weight: bold;">Partners</label>
-                      <div class="btn btn-primary btn-block" style="height: 40px;width: 90px;text-align: left;" id="thanhvienBtn">More</div>  
+                      <div class="btn btn-primary btn-block" style="height: 40px;width: 90px;text-align: center;padding-top:-15px;" id="thanhvienBtn">More</div>  
 
                       <div class="row">
                       <div class="col-md-12">
@@ -573,7 +594,16 @@ $this->session->set_userdata($the_session);
                             </div>
             
                             <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary closePartnerModal">Close</button>
+                              <button type="button" class="closePartnerModal" style="height: 38px;
+                        float: right;
+                        margin-left: 1%;
+                        background-color: #00bcd4ed;
+                        border-radius: 30px;
+                        width:110px;
+                        text-align:center;
+                        padding-top: 5px;
+                        cursor: pointer;
+                        ">Close</button>
                               </div>
             
                             </div>

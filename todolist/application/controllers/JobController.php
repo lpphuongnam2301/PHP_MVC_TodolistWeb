@@ -67,11 +67,9 @@ class JobController extends CI_Controller
         	'nv_id' => $nvId,
         	'job_status' => 0
     	);
-
 		//tao thu muc voi ten la id cua job
 		$location = APPPATH."filesUpload/".$jobId;
 		mkdir($location, 0700);
-
 
     	$this->JobModel->insert($data);
 
@@ -171,7 +169,7 @@ class JobController extends CI_Controller
                     </div>
                 </td>
                 ';
-              if($this->session->userdata('nv_email') == "admin@gmail.com")
+              if($this->session->userdata('username') == "admin@gmail.com")
               {
               		$output .= '<td class="td-actions text-right" style="padding-top: 10px;float:right;">
                     <button type="button" rel="tooltip" title="Edit Comment" class="btn btn-primary btn-link btn-sm editCommentBtn" anlong="'.$row['cm_id'].'">
@@ -182,7 +180,7 @@ class JobController extends CI_Controller
                     </button>
                 	</td>';
               } else {
-              	if($this->session->userdata('nv_id') == $row['nv_id'])
+              	if($this->session->userdata('username') == $row['nv_email'])
               	{
               		$output .= '<td class="td-actions text-right" style="padding-top: 10px;float:right;">
                     <button type="button" rel="tooltip" title="Edit Comment" class="btn btn-primary btn-link btn-sm editCommentBtn" anlong="'.$row['cm_id'].'">
@@ -338,6 +336,8 @@ class JobController extends CI_Controller
 		foreach ($data as $key) 
 		{
 			$name = $this->JobModel->readNvName($key);
+			if($name != "")
+			{
 			$output .=
 			'<tr>
                 <td style="font-weight: bold;">'.$name.'</td>
@@ -347,6 +347,7 @@ class JobController extends CI_Controller
                     </button>
                 </td>
             </tr>';
+			}
 		}
 		}
 		return $output;
@@ -419,7 +420,7 @@ class JobController extends CI_Controller
                     <td class="td-actions text-right">
                     
                     <a type="button" rel="tooltip" title="Download" class="btn btn-danger btn-link btn-sm downFileBtn" anlong="'.$key.'"
-                    href="index.php/JobController/downloadFile/'.$jobId.'/'.$key.'">
+                    href='.base_url().'index.php/JobController/downloadFile/'.$jobId.'/'.$key.'>
                     <i class="material-icons">download</i>
                     </a>
                     <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm removeFileBtn" anlong="'.$key.'">

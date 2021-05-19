@@ -10,7 +10,7 @@
 		//them
         $("#newTaskbtnPublic").click(function()
         {
-            var jobName = document.getElementById("newTasktxtPublic").value;
+            var jobName = $("#newTasktxtPublic").val();
             var jobType = 1;
             if(jobName != "")
             {
@@ -21,6 +21,7 @@
                     data: {"jobName" : jobName, "jobType": jobType},
                     success: function(data)
                     {
+                        // console.log(data);
                         	location.reload();
                     }
                 });
