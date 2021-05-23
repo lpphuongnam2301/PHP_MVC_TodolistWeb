@@ -19,8 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		{
 			$list = $key['nv_id'];
 		}
-		return $list;
-			
+		return $list;			
 		}
 	}	
 ?>
