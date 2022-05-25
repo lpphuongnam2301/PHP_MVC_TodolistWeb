@@ -1,10 +1,10 @@
 # Todolist Website
 
->**Topic:** Website Todolist manages tasks to do
+>**Introduce:** Website Todolist manages tasks to do
 
->**Language:** PHP, JAVASCRIPT
+>**Languages:** PHP, JAVASCRIPT
 
->**Other:** Bootstrap 4, jQuery, Ajax
+>**Others:** Bootstrap 4, jQuery, Ajax
 
 >**Model:** MVC [Codeigniter](https://codeigniter.com/)
 
@@ -26,7 +26,7 @@
 - Down Codeigniter
 - Down XAMPP
 
->**Overview**
+>**Preview**
 
 ![image](https://user-images.githubusercontent.com/68319165/170261126-2a408e2f-1eb3-4901-8acd-b81f55d4f8eb.png)
 ![image](https://user-images.githubusercontent.com/68319165/170261186-6d18d95d-a469-4140-9893-20f65587b314.png)
